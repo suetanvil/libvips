@@ -22,7 +22,7 @@ ACDIR=`aclocal --print-ac-dir`
 # OS X with brew sets ACDIR to
 # /usr/local/Cellar/automake/1.13.1/share/aclocal, the staging area, which is
 # totally wrong argh
-if [ ! -f $ACDIR ]; then
+if [ ! -d $ACDIR ]; then
 	ACDIR=/usr/local/share/aclocal
 fi
 
@@ -31,10 +31,13 @@ cp $ACDIR/codeset.m4 m4
 cp $ACDIR/gettext.m4 m4
 cp $ACDIR/glibc21.m4 m4
 cp $ACDIR/iconv.m4 m4
-cp $ACDIR/isc-posix.m4 m4
 cp $ACDIR/lcmessage.m4 m4
 cp $ACDIR/progtest.m4 m4
 cp $ACDIR/introspection.m4 m4
+
+# isc-posix is obsolete in later versions of autoconfig so we ignore
+# if if it's not there.
+[ -f $ACDIR/isc-posix.m4 ] && cp $ACDIR/isc-posix.m4 m4
 
 gtkdocize --copy --docdir doc/reference --flavour no-tmpl || exit 1
 
